@@ -1,8 +1,25 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 14px 'Exo', sans-serif;
+  background: url("/images/bg.jpg") fixed no-repeat;
+  color:white;
+}
+h1,h2,h3 {
+
+    font-family: 'Monoton', cursive;
 }
 
 a {
   color: #00B7FF;
+}
+
+#title h1 {
+    font-size: 150px;
+    margin:0;
+}
+
+#title .slug {
+   font-size: 30px;
+}
+h1 {
 }
