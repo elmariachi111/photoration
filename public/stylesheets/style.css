@@ -1,11 +1,7 @@
 body {
-  padding: 50px;
-    font: 14px 'Exo', sans-serif;
-  background: url("/images/bg.jpg") fixed no-repeat;
-  color:white;
+  font-family:  'Exo', sans-serif;
 }
 h1,h2,h3 {
-
     font-family: 'Monoton', cursive;
 }
 
