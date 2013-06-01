@@ -8,16 +8,17 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , mongoskin = require('mongoskin');
+  , mongoskin = require('mongoskin')
+    ,Services = require('./routes/services')
+    ,EJSpartials = require('express-partials')
+    ;
 
 
 var app = express();
 var mongo;
 mongo = mongoskin.db(process.env.MONGOLAB_URI + "?auto_reconnect=true&poolSize=2", {w:1});
-var col = mongo.collection("veebibi");
-col.findOne({ type:'test' }, function(err,doc) {
-    console.dir(doc);
-});
+
+var CServices = new Services(mongo);
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -38,7 +39,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/test', CServices.test.bind(CServices));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
