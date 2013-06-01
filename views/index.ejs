@@ -1,8 +1,46 @@
+<div class="container-fluid page" id="page-main">
+    <div class="row-fluid">
+        <div class="span12">
+            <h1>Photoration</h1>
+            <p class="slug">Find the best place and settings to take a brilliant picture</p>
+            <h2>Page 1</h2>
+            <a href="#page2">Page 2</a>
+        </div>
+    </div>
+</div>
 
-  <div id="title">
-    <h1>Photoration</h1>
-    <p class="slug">Find the best place and settings to take a brilliant picture</p>
-    
-  </div>
+<div class="container-fluid page hide" id="page-photo">
+    <div class="row-fluid">
+        <div class="span12">
+            <h2>Page2</h2>
+            <a href="#page1">Page 1</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $( function() {
+        var AppRouter = Backbone.Router.extend({
+
+            routes: {
+                "page1": "page1",    // #help
+                "page2": "page2" // #search/kiwis
+            },
+
+            page1: function() {
+                $('.page').addClass('hide');
+                $('#page-main').removeClass('hide');
+            },
+
+            page2: function() {
+                $('.page').addClass('hide');
+                $('#page-photo').removeClass('hide');
+            }
+
+        });
+        var App = new AppRouter();
+        Backbone.history.start({pushState: false, root: "/"})
+    });
+</script>
 
           
