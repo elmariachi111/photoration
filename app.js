@@ -7,9 +7,17 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , mongoskin = require('mongoskin');
+
 
 var app = express();
+var mongo;
+mongo = mongoskin.db(process.env.MONGOLAB_URI + "?auto_reconnect=true&poolSize=2", {w:1});
+var col = mongo.collection("veebibi");
+col.findOne({ type:'test' }, function(err,doc) {
+    console.dir(doc);
+});
 
 // all environments
 app.set('port', process.env.PORT || 3000);
