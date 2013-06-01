@@ -11,6 +11,6 @@ var Services = module.exports = function(db) {
 
 Services.prototype = {
     test: function(req, res) {
-        res.send("Halloe");
+        res.render('test', { title: 'Express' });
     }
 }

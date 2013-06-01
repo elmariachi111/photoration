@@ -24,6 +24,9 @@ var CServices = new Services(mongo);
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.set('layout', 'stdLayout'); // defaults to 'layout'
+app.use(EJSpartials());
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
