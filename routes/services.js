@@ -12,5 +12,16 @@ var Services = module.exports = function(db) {
 Services.prototype = {
     test: function(req, res) {
         res.render('test', { title: 'Express' });
+    },
+    getFourSquareVenues: function(req, res) {
+
+        var venues = [{
+            name: 'Alexanderplatz',
+            location: null
+        }];
+
+        res.json(venues);
+
     }
 }
+
