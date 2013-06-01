@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "express": "3.2.2",
-    "node-foursquare": "*",
+    "node-foursquare-venues": "0.0.6",
     "ejs": "*",
       "express-partials":"latest",
       "mongoskin":"latest",
