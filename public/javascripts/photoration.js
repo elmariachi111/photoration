@@ -25,9 +25,18 @@ PHR.PageMain = Backbone.View.extend({
 });
 
 PHR.PagePhoto = Backbone.View.extend({
-    show: function() {
+
+    initialize: function() {
+        this.$img = this.$('#theImage');
+
+    },
+    show: function(eyemid) {
         $('.page').addClass('hide');
         this.$el.removeClass('hide');
+
+        var imgSrc = 'http://cdn.eyeem.com/thumb/640/480/9902ae66b227adc660e823debf6a4a621032614b-1370109604';
+        this.$img.attr("src", imgSrc);
+
     }
 });
 
