@@ -57,3 +57,7 @@ h1 {
 h2.spot-name {
     position:absolute;
 }
+div.detailData{
+    display:inline;
+    margin-right: 20%;
+}
