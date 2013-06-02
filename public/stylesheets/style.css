@@ -40,7 +40,7 @@ h1 {
     height: 100%;
 }
 
-#gmap img { /*BS Hack*/
+#gmap img,#gmap2 img { /*BS Hack*/
     max-width:inherit;
 }
 
