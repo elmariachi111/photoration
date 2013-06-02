@@ -43,7 +43,8 @@ PHR.Photo = Backbone.Model.extend({
 
 PHR.MainResultRow = Backbone.View.extend({
     events: {
-        "click .more": "more"
+        "click .more": "more",
+        "click .spot-result a": "savePhotoVenue"
     },
     tagName: "div",
     className: "spot-result-row",
@@ -59,17 +60,22 @@ PHR.MainResultRow = Backbone.View.extend({
     more: function() {
         var cLeft = this.$scrollPane.position().left;
         this.$scrollPane.css({left: (cLeft - 100) + "px"});
+    },
+    savePhotoVenue: function() {
+        this.options.parentView.curVenue = this.model;
     }
 
 });
 
 PHR.ResultsView = Backbone.View.extend({
+    //curVenue
     initialize: function() {
         this.listenTo(this.collection, "add", this.renderRow);
     },
     renderRow: function(venue) {
         var rsRow = new PHR.MainResultRow({
-            model: venue
+            model: venue,
+            parentView: this
         });
         rsRow.render();
         this.$el.append(rsRow.$el);
@@ -96,9 +102,14 @@ PHR.PageMain = Backbone.View.extend({
         this.listenTo(this.venues, "add", this.venueAdded);
         this.resultsView = new PHR.ResultsView({
             el: this.$('#pnl-results'),
-            collection: this.venues
+            collection: this.venues,
+            parentView: this
         });
     },
+    getCurVenue: function() {
+        return this.resultsView.curVenue;
+    },
+
     getPos: function() {
         var self = this;
         this.getNavigatorLocation( function(pos) {
@@ -174,7 +185,11 @@ PHR.PageMain = Backbone.View.extend({
 PHR.App = Backbone.View.extend({
    initialize: function() {
        this.pageMain = new PHR.PageMain({el: $('#page-main')});
-       this.pagePhoto = new PHR.PagePhoto({el: $('#page-photo')});
+       this.pagePhoto = new PHR.PagePhoto({
+           mainPage: this.pageMain,
+           el: $('#page-photo')
+       });
+
        this.router = new PHR.Router();
 
        this.router.route("page-main", "main", this.pageMain.show.bind(this.pageMain))

@@ -2,6 +2,7 @@ PHR.PagePhoto = Backbone.View.extend({
 
     initialize: function() {
         this.$imgDiv = this.$('#theImage');
+        this.mainPage = this.options.mainPage;
     },
     show: function(eyeemid) {
         $('.page').addClass('hide');
@@ -42,6 +43,18 @@ PHR.PagePhoto = Backbone.View.extend({
             map:  gmap,
             animation: google.maps.Animation.DROP
         });
+
+        var curVenue = this.mainPage.getCurVenue();
+        if (curVenue) {
+            var coords = curVenue.get('coords');
+            var ll = new google.maps.LatLng(coords.lat, coords.lon);
+            var marker = new google.maps.Marker({
+                position: ll,
+                map:  gmap,
+                animation: google.maps.Animation.DROP
+            });
+        }
+
         return gmap;
     }
 });
