@@ -41,7 +41,8 @@ PHR.PagePhoto = Backbone.View.extend({
         this.curMarker = new google.maps.Marker({
             position: ll,
             map:  gmap,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
+            icon: "/img/marker.png"
         });
 
         var curVenue = this.mainPage.getCurVenue();
