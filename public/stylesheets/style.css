@@ -76,3 +76,7 @@ h2.spot-name {
     font-size: 1.6em;
 }
 
+div.detailData{
+    display:inline;
+    margin-right: 20%;
+}
