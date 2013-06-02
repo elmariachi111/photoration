@@ -82,7 +82,7 @@ Services.prototype = {
     },
     getPhotoDetails: function(req, res) {
         var responseObject = {};
-        request({"url" : "https://www.eyeem.com/api/v2//photos/"+req.param("id"), "qs" :
+        request({"url" : "https://www.eyeem.com/api/v2/photos/"+req.param("id"), "qs" :
         {
             "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY"
         }}, function (error, response, body) {
