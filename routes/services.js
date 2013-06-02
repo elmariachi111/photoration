@@ -22,7 +22,6 @@ Services.prototype = {
             "categoryId" : "4bf58dd8d48988d1e2931735,5032792091d4c4b30a586d5c,4deefb944765f83613cdba6e,4bf58dd8d48988d190941735,4bf58dd8d48988d192941735,4bf58dd8d48988d191941735,4bf58dd8d48988d136941735,4bf58dd8d48988d137941735,507c8c4091d498d9fc8c67a9,4bf58dd8d48988d1f4931735,4bf58dd8d48988d184941735,4d4b7105d754a06372d81259,4bf58dd8d48988d1e2941735,4bf58dd8d48988d1df941735,50aaa49e4b90af0d42d5de11,4bf58dd8d48988d15c941735,4bf58dd8d48988d1e0941735,4bf58dd8d48988d161941735,4bf58dd8d48988d15d941735,4eb1d4d54b900d56c88a45fc,4bf58dd8d48988d163941735,4bf58dd8d48988d164941735,4bf58dd8d48988d165941735,4bf58dd8d48988d166941735,5032848691d4c4b30a586d61,4bf58dd8d48988d126941735,4bf58dd8d48988d131941735,4bf58dd8d48988d1f7941735,4bf58dd8d48988d12c951735"
         };
         foursquare.venues.search(searchObj,function (err, doc, resp) {
-            console.dir (err);
             var params = {};
             var responseObject = {};
             responseObject.count = doc.response.venues.length;
@@ -40,8 +39,10 @@ Services.prototype = {
                         resp = JSON.parse(body);
                         responseObject.venues.push({
                             "id" : resp.foursquareVenueAlbum.id,
+                            "foursquareId":resp.foursquareVenueAlbum.location.venueService.id,
                             "name" : resp.foursquareVenueAlbum.name,
                             "picCount" : resp.foursquareVenueAlbum.photos.length,
+                            "coords" : { "lat" : resp.foursquareVenueAlbum.location.latitude, "lon" : resp.foursquareVenueAlbum.location.longitude} ,
                             "images" : resp.foursquareVenueAlbum.photos
                         });
                         j++;
