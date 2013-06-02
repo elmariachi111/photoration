@@ -1,7 +1,34 @@
 PHR = { };
 
+PHR.Venue = Backbone.Model.extend({
+
+});
+
+PHR.Venues = Backbone.Collection.extend({
+
+    url: "/foursquareVenues",
+    model: PHR.Venue
+});
+
 PHR.Router = Backbone.Router.extend({
 
+});
+
+PHR.ResultsView = Backbone.View.extend({
+    initialize: function() {
+        this.listenTo(this.collection, "reset", this.render)
+    },
+    render: function() {
+        return this;
+    }
+});
+
+PHR.MainResultRow = Backbone.View.extend({
+    tagName: "div",
+    className: "",
+    render: function() {
+
+    }
 });
 
 PHR.PageMain = Backbone.View.extend({
@@ -15,24 +42,13 @@ PHR.PageMain = Backbone.View.extend({
                 longitude: 13.418126
             }
         }
-        var defaultLocLL = new google.maps.LatLng(this.DEFAULT_LOCATION.coords.latitude, this.DEFAULT_LOCATION.coords.longitude);
-        var mapOptions = {
-            center: defaultLocLL,
-            zoom: 10,
-            mapTypeControl: false,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL
-            },
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        this.gmap = new google.maps.Map(document.getElementById('gmap'),  mapOptions);
-        google.maps.event.addListener(self.gmap, 'click', this.onMapClicked.bind(this));
-
-        this.curMarker = new google.maps.Marker({
-            position: defaultLocLL,
-            map: this.gmap,
-            animation: google.maps.Animation.DROP
+        this.setupMap();
+        this.venues = new PHR.Venues;
+        this.resultsView = new PHR.ResultsView({
+            el: this.$('#pnl-results'),
+            collection: this.venues
         });
+
     },
     getPos: function() {
         var self = this;
@@ -40,10 +56,12 @@ PHR.PageMain = Backbone.View.extend({
             var gmPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
             self.gmap.setCenter(gmPos);
             self.gmap.setZoom(15);
-
             self.curMarker.setPosition(gmPos);
-        })
-
+            self.showPOIs(pos);
+        });
+    },
+    showPOIs: function(pos) {
+        this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
     },
     getNavigatorLocation: function(callback) {
         var self = this;
@@ -58,6 +76,30 @@ PHR.PageMain = Backbone.View.extend({
             {'enableHighAccuracy':true,'timeout':10000,'maximumAge':0}
         );
         return true;
+    },
+    setupMap: function() {
+        var defaultLocLL = new google.maps.LatLng(this.DEFAULT_LOCATION.coords.latitude, this.DEFAULT_LOCATION.coords.longitude);
+
+        var mapOptions = {
+            center: defaultLocLL,
+            zoom: 10,
+            mapTypeControl: false,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        this.gmap = new google.maps.Map(document.getElementById('gmap'),  mapOptions);
+
+        this.curMarker = new google.maps.Marker({
+            position: defaultLocLL,
+            map: this.gmap,
+            animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(self.gmap, 'click', this.onMapClicked.bind(this));
+
+
     },
     onMapClicked: function() {
 
