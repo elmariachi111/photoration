@@ -26,7 +26,7 @@ h1 {
 #gmap-container, #gmap-container2 {
     position:relative;
     width:100%;
-    height:10em;
+    height:17em;
 }
 #gmap-container #btn-curLoc {
     position:absolute;
@@ -79,8 +79,18 @@ h2.spot-name {
     z-index: 10;
     margin: 0;
     font-size: 1.6em;
+    background: rgba(80,80,80,0.8);
+    padding: 0.3em;
 }
 
+#page-main .header {
+    width: 100%;
+    height: 6em;
+    position: absolute;
+    z-index: 20;
+    top: 0.4em;
+    background-color: rgba(80,80,80,0.6);
+}
 div.detailData{
     display:inline;
     margin-right: 20%;
