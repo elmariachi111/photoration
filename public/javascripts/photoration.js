@@ -95,7 +95,8 @@ PHR.PageMain = Backbone.View.extend({
                 latitude: 52.516012,
                 longitude: 13.418126
             }
-        }
+        };
+        this.$loading = this.$('#loading');
         this.setupMap();
         this.markers = [];
         this.venues = new PHR.Venues();
@@ -105,12 +106,14 @@ PHR.PageMain = Backbone.View.extend({
             collection: this.venues,
             parentView: this
         });
+        this.getPos();
     },
     getCurVenue: function() {
         return this.resultsView.curVenue;
     },
 
     getPos: function() {
+        this.$loading.show();
         var self = this;
         this.getNavigatorLocation( function(pos) {
             var gmPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
@@ -122,7 +125,11 @@ PHR.PageMain = Backbone.View.extend({
     },
     showPOIs: function(pos) {
         this.removeMarkers();
-        this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
+        var self = this;
+        this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude},
+        success: function(){
+            self.$loading.hide();
+        }});
     },
     venueAdded: function(venue) {
         var marker = new google.maps.Marker({
