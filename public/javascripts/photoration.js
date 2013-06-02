@@ -1,13 +1,32 @@
 PHR = { };
 
 PHR.Venue = Backbone.Model.extend({
+    /*
+    id : Eyeemid
+    foursquareId
+    name:
+    coords: { lat, lon }
+    images: { offset, limit, total, items [ { id, thumbUrl, photoUrl} ]}
+     */
+    getGLatLng: function() {
+        var coords = this.get('coords');
+        return new google.maps.LatLng(coords.lat, coords.lon);
 
+    }
 });
 
 PHR.Venues = Backbone.Collection.extend({
 
     url: "/foursquareVenues",
-    model: PHR.Venue
+    model: PHR.Venue,
+    parse: function(response) {
+        var self = this;
+        _.each(response.venues, function(v) {
+            var venue = new PHR.Venue(v);
+            self.add(venue);
+        });
+
+    }
 });
 
 PHR.Router = Backbone.Router.extend({
@@ -16,16 +35,16 @@ PHR.Router = Backbone.Router.extend({
 
 PHR.ResultsView = Backbone.View.extend({
     initialize: function() {
-        this.listenTo(this.collection, "reset", this.render)
+        this.collection.on( "add", this.renderRow);
     },
-    render: function() {
+    renderRow: function(venue) {
         return this;
     }
 });
 
 PHR.MainResultRow = Backbone.View.extend({
     tagName: "div",
-    className: "",
+    className: "spot-result-row",
     render: function() {
 
     }
@@ -43,12 +62,13 @@ PHR.PageMain = Backbone.View.extend({
             }
         }
         this.setupMap();
-        this.venues = new PHR.Venues;
+        this.markers = [];
+        this.venues = new PHR.Venues();
+        this.listenTo(this.venues, "add", this.venueAdded);
         this.resultsView = new PHR.ResultsView({
             el: this.$('#pnl-results'),
             collection: this.venues
         });
-
     },
     getPos: function() {
         var self = this;
@@ -61,7 +81,21 @@ PHR.PageMain = Backbone.View.extend({
         });
     },
     showPOIs: function(pos) {
+        this.removeMarkers();
         this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
+    },
+    venueAdded: function(venue) {
+
+        var marker = new google.maps.Marker({
+            position: venue.getGLatLng(),
+            map: this.gmap
+        });
+        this.markers.push(marker);
+    },
+    removeMarkers: function() {
+        _.each(this.markers, function(marker) {
+            marker.setMap(null);
+        })
     },
     getNavigatorLocation: function(callback) {
         var self = this;
