@@ -45,6 +45,7 @@ app.get('/', routes.index);
 app.get('/test', CServices.test.bind(CServices));
 app.get('/foursquareVenues', CServices.getFourSquareVenues.bind(CServices));
 app.get('/getMorePics', CServices.getNextPicturesForLocation.bind(CServices));
+app.get('/getPhotoDetails', CServices.getPhotoDetails.bind(CServices));
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
