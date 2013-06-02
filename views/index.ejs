@@ -44,11 +44,11 @@
 <script id="tpl_spot_row" type="text/html">
     <h2 class="spot-name">{{name}}</h2>
     <div class="scroll-pane"> {{images.offset}}
-        {{#images.items}}
+        {{#images}}
         <div class="spot-result">
             <a href="#page-photo/{{id}}"><img src="{{thumbUrl}}" /></a>
         </div>
-        {{/images.items}}
+        {{/images}}
     </div>
 
 </script>
