@@ -35,18 +35,26 @@ Services.prototype = {
                     "foursquareId" : ""+doc.response.venues[i].id,
                     "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY",
                     "geoSearch" : "foursquareVenue"
-                }}, function (error, response, body) {
-                        resp = JSON.parse(body);
+                }}, function (error, response2, body) {
+                    var resp = JSON.parse(body);
+                    request({"url" : "https://www.eyeem.com/api/v2/albums/"+resp.foursquareVenueAlbum.id+"/photos", "qs" :
+                    {
+                        "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY",
+                        "top" : "true"
+                    }}, function (error, response, body) {
+
+                        var resp2 = JSON.parse(body);
                         responseObject.venues.push({
                             "id" : resp.foursquareVenueAlbum.id,
                             "foursquareId":resp.foursquareVenueAlbum.location.venueService.id,
                             "name" : resp.foursquareVenueAlbum.name,
                             "picCount" : resp.foursquareVenueAlbum.photos.length,
                             "coords" : { "lat" : resp.foursquareVenueAlbum.location.latitude, "lon" : resp.foursquareVenueAlbum.location.longitude} ,
-                            "images" : resp.foursquareVenueAlbum.photos
+                            "images" : resp2.photos.items
                         });
                         j++;
                         if (j>=doc.response.venues.length-1) res.json(responseObject);
+                    });
                 })
 
             }
