@@ -25,6 +25,13 @@ h1 {
     width:100%;
     height:10em;
 }
+#gmap-container #btn-curLoc {
+    position:absolute;
+    right: 0.2em;
+    top:0.1em;
+    z-index:20;
+}
+
 #gmap {
     width: 100%;
     height: 100%;
