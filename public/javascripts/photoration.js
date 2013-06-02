@@ -43,14 +43,22 @@ PHR.Photo = Backbone.Model.extend({
 
 PHR.MainResultRow = Backbone.View.extend({
     events: {
-
+        "click .more": "more"
     },
     tagName: "div",
     className: "spot-result-row",
+    initialize: function() {
+
+    },
     render: function() {
         var html = PHR.TPL.tpl_spot_row(this.model.toJSON());
         this.$el.html(html);
+        this.$scrollPane = this.$('.scroll-pane');
         return this;
+    },
+    more: function() {
+        var cLeft = this.$scrollPane.position().left;
+        this.$scrollPane.css({left: (cLeft - 100) + "px"});
     }
 
 });
@@ -162,8 +170,6 @@ PHR.PageMain = Backbone.View.extend({
         this.$el.removeClass('hide');
     }
 });
-
-
 
 PHR.App = Backbone.View.extend({
    initialize: function() {

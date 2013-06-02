@@ -47,7 +47,22 @@ h1 {
     overflow:hidden;
 }
 .spot-result-row .scroll-pane {
-    width:1000%;
+    width:10000px;
+    left:0px;
+    position:relative;
+}
+.spot-result-row .more {
+    position: absolute;
+    right: 0;
+    width: 8%;
+    font-size: 1.7em;
+    z-index: 30;
+    background-color: rgba(80,80,80,0.5);
+    height: 100%;
+}
+.spot-result-row .more i {
+    margin-top: 100%;
+    margin-left:25%;
 }
 .spot-result-row .spot-result {
     float:left;
@@ -55,5 +70,9 @@ h1 {
 }
 
 h2.spot-name {
-    position:absolute;
+    position: absolute;
+    z-index: 10;
+    margin: 0;
+    font-size: 1.6em;
 }
+
