@@ -26,10 +26,11 @@ Services.prototype = {
             var responseObject = {};
             responseObject.count = doc.response.venues.length;
             responseObject.venues = [];
-            var resp;
             var j=0;
             for (var i=0;i<doc.response.venues.length;i++)
             {
+                var tempFsq = doc.response.venues[i].location.address;
+
                 request({"url" : "https://www.eyeem.com/api/v2/albums", "qs" :
                 {
                     "foursquareId" : ""+doc.response.venues[i].id,
@@ -81,7 +82,7 @@ Services.prototype = {
     },
     getPhotoDetails: function(req, res) {
         var responseObject = {};
-        request({"url" : "https://www.eyeem.com/api/v2//photos/"+req.param("id"), "qs" :
+        request({"url" : "https://www.eyeem.com/api/v2/photos/"+req.param("id"), "qs" :
         {
             "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY"
         }}, function (error, response, body) {
