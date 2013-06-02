@@ -37,8 +37,14 @@ PHR.Venues = Backbone.Collection.extend({
 
     }
 });
+PHR.Photo = Backbone.Model.extend({
+
+});
 
 PHR.MainResultRow = Backbone.View.extend({
+    events: {
+
+    },
     tagName: "div",
     className: "spot-result-row",
     render: function() {
@@ -46,6 +52,7 @@ PHR.MainResultRow = Backbone.View.extend({
         this.$el.html(html);
         return this;
     }
+
 });
 
 PHR.ResultsView = Backbone.View.extend({
@@ -160,15 +167,18 @@ PHR.PagePhoto = Backbone.View.extend({
 
     initialize: function() {
         this.$img = this.$('#theImage');
-
     },
     show: function(eyeemid) {
         $('.page').addClass('hide');
         this.$el.removeClass('hide');
 
-        var imgSrc = 'http://cdn.eyeem.com/thumb/640/480/9902ae66b227adc660e823debf6a4a621032614b-1370109604';
-        this.$img.attr("src", imgSrc);
+        var self = this;
 
+        $.get("/getPhotoDetails", {id:eyeemid}, function(resp) {
+            console.dir(resp);
+            var image = new PHR.Photo(resp.photo);
+            self.$img.attr("src", image.get('photoUrl'));
+        });
     }
 });
 
