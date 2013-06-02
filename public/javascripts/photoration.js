@@ -1,7 +1,53 @@
 PHR = { };
 
+PHR.Venue = Backbone.Model.extend({
+    /*
+    id : Eyeemid
+    foursquareId
+    name:
+    coords: { lat, lon }
+    images: { offset, limit, total, items [ { id, thumbUrl, photoUrl} ]}
+     */
+    getGLatLng: function() {
+        var coords = this.get('coords');
+        return new google.maps.LatLng(coords.lat, coords.lon);
+
+    }
+});
+
+PHR.Venues = Backbone.Collection.extend({
+
+    url: "/foursquareVenues",
+    model: PHR.Venue,
+    parse: function(response) {
+        var self = this;
+        _.each(response.venues, function(v) {
+            var venue = new PHR.Venue(v);
+            self.add(venue);
+        });
+
+    }
+});
+
 PHR.Router = Backbone.Router.extend({
 
+});
+
+PHR.ResultsView = Backbone.View.extend({
+    initialize: function() {
+        this.collection.on( "add", this.renderRow);
+    },
+    renderRow: function(venue) {
+        return this;
+    }
+});
+
+PHR.MainResultRow = Backbone.View.extend({
+    tagName: "div",
+    className: "spot-result-row",
+    render: function() {
+
+    }
 });
 
 PHR.PageMain = Backbone.View.extend({
@@ -15,23 +61,13 @@ PHR.PageMain = Backbone.View.extend({
                 longitude: 13.418126
             }
         }
-        var defaultLocLL = new google.maps.LatLng(this.DEFAULT_LOCATION.coords.latitude, this.DEFAULT_LOCATION.coords.longitude);
-        var mapOptions = {
-            center: defaultLocLL,
-            zoom: 10,
-            mapTypeControl: false,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL
-            },
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        this.gmap = new google.maps.Map(document.getElementById('gmap'),  mapOptions);
-        google.maps.event.addListener(self.gmap, 'click', this.onMapClicked.bind(this));
-
-        this.curMarker = new google.maps.Marker({
-            position: defaultLocLL,
-            map: this.gmap,
-            animation: google.maps.Animation.DROP
+        this.setupMap();
+        this.markers = [];
+        this.venues = new PHR.Venues();
+        this.listenTo(this.venues, "add", this.venueAdded);
+        this.resultsView = new PHR.ResultsView({
+            el: this.$('#pnl-results'),
+            collection: this.venues
         });
     },
     getPos: function() {
@@ -40,10 +76,26 @@ PHR.PageMain = Backbone.View.extend({
             var gmPos = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
             self.gmap.setCenter(gmPos);
             self.gmap.setZoom(15);
-
             self.curMarker.setPosition(gmPos);
-        })
+            self.showPOIs(pos);
+        });
+    },
+    showPOIs: function(pos) {
+        this.removeMarkers();
+        this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
+    },
+    venueAdded: function(venue) {
 
+        var marker = new google.maps.Marker({
+            position: venue.getGLatLng(),
+            map: this.gmap
+        });
+        this.markers.push(marker);
+    },
+    removeMarkers: function() {
+        _.each(this.markers, function(marker) {
+            marker.setMap(null);
+        })
     },
     getNavigatorLocation: function(callback) {
         var self = this;
@@ -58,6 +110,30 @@ PHR.PageMain = Backbone.View.extend({
             {'enableHighAccuracy':true,'timeout':10000,'maximumAge':0}
         );
         return true;
+    },
+    setupMap: function() {
+        var defaultLocLL = new google.maps.LatLng(this.DEFAULT_LOCATION.coords.latitude, this.DEFAULT_LOCATION.coords.longitude);
+
+        var mapOptions = {
+            center: defaultLocLL,
+            zoom: 10,
+            mapTypeControl: false,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL
+            },
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        this.gmap = new google.maps.Map(document.getElementById('gmap'),  mapOptions);
+
+        this.curMarker = new google.maps.Marker({
+            position: defaultLocLL,
+            map: this.gmap,
+            animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(self.gmap, 'click', this.onMapClicked.bind(this));
+
+
     },
     onMapClicked: function() {
 
