@@ -1,4 +1,13 @@
 PHR = { };
+PHR.Router = Backbone.Router.extend({
+
+});
+
+$( function() {
+    PHR.TPL = {
+        tpl_spot_row: Mustache.compile(document.getElementById('tpl_spot_row').innerHTML)
+    };
+});
 
 PHR.Venue = Backbone.Model.extend({
     /*
@@ -29,26 +38,32 @@ PHR.Venues = Backbone.Collection.extend({
     }
 });
 
-PHR.Router = Backbone.Router.extend({
-
-});
-
-PHR.ResultsView = Backbone.View.extend({
-    initialize: function() {
-        this.collection.on( "add", this.renderRow);
-    },
-    renderRow: function(venue) {
-        return this;
-    }
-});
-
 PHR.MainResultRow = Backbone.View.extend({
     tagName: "div",
     className: "spot-result-row",
     render: function() {
-
+        var html = PHR.TPL.tpl_spot_row(this.model.toJSON());
+        this.$el.html(html);
+        return this;
     }
 });
+
+PHR.ResultsView = Backbone.View.extend({
+    initialize: function() {
+        this.listenTo(this.collection, "add", this.renderRow);
+    },
+    renderRow: function(venue) {
+        var rsRow = new PHR.MainResultRow({
+            model: venue
+        });
+        rsRow.render();
+        this.$el.append(rsRow.$el);
+
+        return this;
+    }
+});
+
+
 
 PHR.PageMain = Backbone.View.extend({
     events: {
@@ -85,7 +100,6 @@ PHR.PageMain = Backbone.View.extend({
         this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
     },
     venueAdded: function(venue) {
-
         var marker = new google.maps.Marker({
             position: venue.getGLatLng(),
             map: this.gmap
@@ -132,7 +146,6 @@ PHR.PageMain = Backbone.View.extend({
         });
 
         google.maps.event.addListener(self.gmap, 'click', this.onMapClicked.bind(this));
-
 
     },
     onMapClicked: function() {

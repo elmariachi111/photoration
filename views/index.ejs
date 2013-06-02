@@ -17,23 +17,6 @@
 
         <div id="pnl-results">
 
-            <div class="spot-result-row" data-fsqid="">
-                <h2 class="spot-name">Location1</h2>
-                <div class="scroll-pane">
-                    <div class="spot-result">
-                        <a href="#page-photo/123"><img src="http://cdn.eyeem.com/thumb/h/100/b47dc46c6ce184e3b2185322f545c6edd32e8ee2-1369737765" /></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="spot-result-row" data-fsqid="">
-                <h2 class="spot-name">Location1</h2>
-                <div class="scroll-pane">
-                    <div class="spot-result">
-                        <a href="#page-photo/123"><img src="http://cdn.eyeem.com/thumb/h/100/b47dc46c6ce184e3b2185322f545c6edd32e8ee2-1369737765" /></a>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -57,5 +40,22 @@
         Backbone.history.start({pushState: false, root: "/"})
     });
 </script>
+
+<script id="tpl_spot_row" type="text/html">
+    <h2 class="spot-name">{{name}}</h2>
+    <div class="scroll-pane"> {{images.offset}}
+        {{#images}}
+        <div class="spot-result">
+            <a href="#page-photo/{{id}}"><img src="{{thumbUrl}}" /></a>
+        </div>
+        {{/images}}
+    </div>
+
+</script>
+
+<script id="tpl_spot_result" type="text/html">
+    <a href="#page-photo/{{id}}"><img src="{{thumbUrl}}" /></a>
+</script>
+
 
           
