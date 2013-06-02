@@ -64,7 +64,6 @@ PHR.ResultsView = Backbone.View.extend({
 });
 
 
-
 PHR.PageMain = Backbone.View.extend({
     events: {
         "click #btn-curLoc":"getPos"
@@ -163,7 +162,7 @@ PHR.PagePhoto = Backbone.View.extend({
         this.$img = this.$('#theImage');
 
     },
-    show: function(eyemid) {
+    show: function(eyeemid) {
         $('.page').addClass('hide');
         this.$el.removeClass('hide');
 
