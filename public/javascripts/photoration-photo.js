@@ -47,8 +47,7 @@ PHR.PagePhoto = Backbone.View.extend({
 
         var curVenue = this.mainPage.getCurVenue();
         if (curVenue) {
-            var coords = curVenue.get('coords');
-            var ll = new google.maps.LatLng(coords.lat, coords.lon);
+            var ll = curVenue.getGLatLng();
             var marker = new google.maps.Marker({
                 position: ll,
                 map:  gmap,

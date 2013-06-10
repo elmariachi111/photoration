@@ -43,7 +43,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/test', CServices.test.bind(CServices));
-app.get('/foursquareVenues', CServices.getFourSquareVenues.bind(CServices));
+app.get('/foursquareVenues', CServices.getImageLanes.bind(CServices));
 app.get('/getMorePics', CServices.getNextPicturesForLocation.bind(CServices));
 app.get('/getPhotoDetails', CServices.getPhotoDetails.bind(CServices));
 

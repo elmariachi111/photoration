@@ -53,8 +53,11 @@ h1 {
 }
 .spot-result-row .scroll-pane {
     width:10000px;
+    height:100px;
     left:0px;
     position:relative;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
 }
 .spot-result-row .more {
     position: absolute;
@@ -72,6 +75,11 @@ h1 {
 .spot-result-row .spot-result {
     float:left;
     margin-right:10px;
+    width: 150px;
+    height: 100%;
+    background-size: 110%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
 
 h2.spot-name {
@@ -86,7 +94,7 @@ h2.spot-name {
 #page-main .header {
     width: 100%;
     height: 6em;
-    position: absolute;
+    position: relative;
     z-index: 20;
     top: 0.4em;
     background-color: rgba(80,80,80,0.6);

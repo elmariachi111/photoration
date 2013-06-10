@@ -10,6 +10,7 @@
       "request": "2.21.0",
       "node-foursquare-venues": "0.0.6",
       "ejs": "*",
+      "async": "*",
       "express-partials":"latest",
       "mongoskin":"latest",
       "lodash":"latest"

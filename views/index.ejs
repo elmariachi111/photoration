@@ -1,9 +1,8 @@
 <div class="container-fluid" id="theApp" style="" >
-
+    <div class="header">
+        <img src="/img/logo.png" />
+    </div>
     <div class="row-fluid page" id="page-main">
-        <div class="header">
-           <img src="/img/logo.png" />
-        </div>
         <div class="row-fluid" id="pnl-map" >
             <div class="span12">
                 <div id="gmap-container">
@@ -68,15 +67,14 @@
 
 <script id="tpl_spot_row" type="text/html">
     <h2 class="spot-name">{{name}}</h2>
-    <div class="more"><i class="icon-chevron-right icon-white"> </i></div>
 
     <div class="scroll-pane">
 
-        {{#images}}
-        <div class="spot-result">
-            <a href="#page-photo/{{id}}"><img src="{{thumbUrl}}" /></a>
+        {{#extPictures.eyeemAlbum.photos.items}}
+        <div class="spot-result" data-target="page-photo/{{id}}" style="background-image:url('{{thumbUrl}}');">
+
         </div>
-        {{/images}}
+        {{/extPictures.eyeemAlbum.photos.items}}
     </div>
 
 </script>

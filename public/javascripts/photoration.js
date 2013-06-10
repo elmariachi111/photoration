@@ -18,8 +18,8 @@ PHR.Venue = Backbone.Model.extend({
     images: { offset, limit, total, items [ { id, thumbUrl, photoUrl} ]}
      */
     getGLatLng: function() {
-        var coords = this.get('coords');
-        return new google.maps.LatLng(coords.lat, coords.lon);
+        var location = this.get('location');
+        return new google.maps.LatLng(location.lat, location.lng);
 
     }
 });
@@ -43,8 +43,7 @@ PHR.Photo = Backbone.Model.extend({
 
 PHR.MainResultRow = Backbone.View.extend({
     events: {
-        "click .more": "more",
-        "click .spot-result a": "savePhotoVenue"
+        "click .spot-result": "savePhotoVenue"
     },
     tagName: "div",
     className: "spot-result-row",
@@ -53,16 +52,34 @@ PHR.MainResultRow = Backbone.View.extend({
     },
     render: function() {
         var html = PHR.TPL.tpl_spot_row(this.model.toJSON());
+        var that = this;
         this.$el.html(html);
+
         this.$scrollPane = this.$('.scroll-pane');
+        this.$scrollPane.swipe({
+
+            swipe:function(event, direction, distance, duration, fingerCount){
+                var cLeft = that.$scrollPane.position().left;
+                if (direction=="left") {
+                    that.$scrollPane.css({left: (cLeft - distance*1.5) + "px"});
+                } else if (direction=="right"){
+                    that.$scrollPane.css({left: (cLeft + distance*1.5) + "px"});
+                }
+                return false;
+            },
+            threshold:20,
+            allowPageScroll:"vertical",
+            triggerOnTouchEnd : true
+        });
         return this;
     },
     more: function() {
         var cLeft = this.$scrollPane.position().left;
         this.$scrollPane.css({left: (cLeft - 100) + "px"});
     },
-    savePhotoVenue: function() {
+    savePhotoVenue: function(evt) {
         this.options.parentView.curVenue = this.model;
+        this.options.parentView.trigger("selected", $(evt.currentTarget).data('target'));
     }
 
 });
@@ -106,6 +123,10 @@ PHR.PageMain = Backbone.View.extend({
             collection: this.venues,
             parentView: this
         });
+        this.listenTo(this.resultsView, "selected", function(fragment) {
+            this.trigger("selected", fragment);
+        });
+
         this.getPos();
     },
     getCurVenue: function() {
@@ -191,7 +212,11 @@ PHR.PageMain = Backbone.View.extend({
 
 PHR.App = Backbone.View.extend({
    initialize: function() {
+
        this.pageMain = new PHR.PageMain({el: $('#page-main')});
+       this.listenTo(this.pageMain, "selected", function(fragment) {
+           this.router.navigate(fragment, {trigger:true});
+       })
        this.pagePhoto = new PHR.PagePhoto({
            mainPage: this.pageMain,
            el: $('#page-photo')
@@ -199,8 +224,8 @@ PHR.App = Backbone.View.extend({
 
        this.router = new PHR.Router();
 
-       this.router.route("page-main", "main", this.pageMain.show.bind(this.pageMain))
-       this.router.route("page-photo/:eyeemid", "photo", this.pagePhoto.show.bind(this.pagePhoto))
+       this.router.route("page-main", "main", this.pageMain.show.bind(this.pageMain));
+       this.router.route("page-photo/:eyeemid", "photo", this.pagePhoto.show.bind(this.pagePhoto));
    }
 
 });
