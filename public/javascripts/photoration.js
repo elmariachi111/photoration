@@ -5,6 +5,7 @@ PHR.Router = Backbone.Router.extend({
 
 $( function() {
     PHR.TPL = {
+        tpl_spot_result: Mustache.compilePartial('tpl_spot_result',document.getElementById('tpl_spot_result').innerHTML),
         tpl_spot_row: Mustache.compile(document.getElementById('tpl_spot_row').innerHTML)
     };
 });
@@ -17,9 +18,36 @@ PHR.Venue = Backbone.Model.extend({
     coords: { lat, lon }
     images: { offset, limit, total, items [ { id, thumbUrl, photoUrl} ]}
      */
+    initialize: function() {
+      this.on('swiped', this.swiped);
+    },
     getGLatLng: function() {
         var location = this.get('location');
         return new google.maps.LatLng(location.lat, location.lng);
+    },
+    getAlbum: function() {
+        return this.get('extPictures').eyeemAlbum;
+    },
+    loadMore: function() {
+        var that= this;
+        var eyeemAlbum = this.getAlbum();
+        if (eyeemAlbum.totalPhotos > eyeemAlbum.photos.items.length) {
+            $.get('getMorePhotos', {offset:eyeemAlbum.photos.items.length, albumId:eyeemAlbum.id}).done( function(result) {
+                _.each(result.photos.items, function(item) {
+                    eyeemAlbum.photos.items.push(item);
+                })
+                that.trigger("loaded:items", result.photos.items);
+            }) ;
+        } else {
+            //no more photos to load
+        }
+    },
+    swiped: function(newPos) {
+        var eyeemAlbum = this.getAlbum();
+        var photoDisplayLength = eyeemAlbum.photos.items.length * 160;
+        if (Math.abs(newPos) > photoDisplayLength - 500)
+            this.loadMore();
+
 
     }
 });
@@ -47,7 +75,14 @@ PHR.MainResultRow = Backbone.View.extend({
     tagName: "div",
     className: "spot-result-row",
     initialize: function() {
-
+        this.listenTo(this.model, "loaded:items", this.renderMoreItems)
+    },
+    renderMoreItems: function(items) {
+        var $scrollPane = this.$scrollPane;
+        _.each(items, function(item) {
+            var html = PHR.TPL.tpl_spot_result(item);
+            $scrollPane.append(html);
+        });
     },
     render: function() {
         var html = PHR.TPL.tpl_spot_row(this.model.toJSON());
@@ -60,7 +95,9 @@ PHR.MainResultRow = Backbone.View.extend({
             .on("swipeleft swiperight", function(ev) {
                 var cLeft = that.$scrollPane.position().left;
                 var distance = ev.gesture.deltaX;
-                that.$scrollPane.css({left: Math.min(0,(cLeft + distance*1.8)) + "px"});
+                var newPos = Math.min(0,(cLeft + distance*1.8));
+                that.$scrollPane.css({left: newPos + "px"});
+                that.model.trigger("swiped", newPos);
             });
 
         this.$scrollPane.hammer().on("tap", this.venueSelected.bind(this));

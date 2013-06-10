@@ -112,28 +112,21 @@ Services.prototype = {
         });
 
     },
-    getNextPicturesForLocation: function(req, res) {
-        var responseObject = {};
-        request({"url" : "https://www.eyeem.com/api/v2/albums/"+req.param("id")+"/photos", "qs" :
+    getMorePhotos: function(req, res) {
+        request({"url" : "https://www.eyeem.com/api/v2/albums/"+req.param("albumId")+"/photos", "qs" :
         {
-            "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY",
+            "client_id" : this.EYEEM_CLIENT_ID,
             "offset": req.param("offset"),
             "limit" : 10
         }}, function (error, response, body) {
             var resp = JSON.parse(body);
-            responseObject = {
-                "images" : resp.photos
-            };
-            res.json(responseObject);
-        })
-
-
+            res.json(resp);
+        });
     },
     getPhotoDetails: function(req, res) {
-        var responseObject = {};
         request({"url" : "https://www.eyeem.com/api/v2/photos/"+req.param("id"), "qs" :
         {
-            "client_id" : "66deRhwbEUdH6fIRbKn8czsL61skxwFY"
+            "client_id" : this.EYEEM_CLIENT_ID
         }}, function (error, response, body) {
             var resp = JSON.parse(body);
             res.json(resp);

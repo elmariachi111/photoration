@@ -69,18 +69,17 @@
     <h2 class="spot-name">{{name}}</h2>
 
     <div class="scroll-pane">
-
         {{#extPictures.eyeemAlbum.photos.items}}
-        <div class="spot-result" data-target="#page-photo/{{id}}" style="background-image:url('{{thumbUrl}}');">
-
-        </div>
+            {{> tpl_spot_result }}
         {{/extPictures.eyeemAlbum.photos.items}}
     </div>
 
 </script>
 
 <script id="tpl_spot_result" type="text/html">
-    <a href="#page-photo/{{id}}"><img src="{{thumbUrl}}" /></a>
+    <div class="spot-result" data-target="#page-photo/{{id}}" style="background-image:url('{{thumbUrl}}');">
+
+    </div>
 </script>
 
 
