@@ -11,13 +11,7 @@ $( function() {
 });
 
 PHR.Venue = Backbone.Model.extend({
-    /*
-    id : Eyeemid
-    foursquareId
-    name:
-    coords: { lat, lon }
-    images: { offset, limit, total, items [ { id, thumbUrl, photoUrl} ]}
-     */
+
     initialize: function() {
       this.on('swiped', this.swiped);
     },
@@ -45,10 +39,8 @@ PHR.Venue = Backbone.Model.extend({
     swiped: function(newPos) {
         var eyeemAlbum = this.getAlbum();
         var photoDisplayLength = eyeemAlbum.photos.items.length * 160;
-        if (Math.abs(newPos) > photoDisplayLength - 500)
+        if (Math.abs(newPos) > photoDisplayLength - 800)
             this.loadMore();
-
-
     }
 });
 
@@ -103,10 +95,6 @@ PHR.MainResultRow = Backbone.View.extend({
         this.$scrollPane.hammer().on("tap", this.venueSelected.bind(this));
         return this;
     },
-    more: function() {
-        var cLeft = this.$scrollPane.position().left;
-        this.$scrollPane.css({left: (cLeft - 100) + "px"});
-    },
     venueSelected: function(evt) {
         var target = $(evt.target).data('target');
         this.options.parentView.curVenue = this.model;
@@ -135,7 +123,8 @@ PHR.ResultsView = Backbone.View.extend({
 
 PHR.PageMain = Backbone.View.extend({
     events: {
-        "click #btn-curLoc":"getPos"
+        "click #btn-curLoc":"getPos",
+        "click #btn-loadmore-venues": "loadMoreVenues"
     },
     initialize: function() {
         this.DEFAULT_LOCATION = {
@@ -159,6 +148,9 @@ PHR.PageMain = Backbone.View.extend({
         });
 
         this.getPos();
+    },
+    loadMoreVenues: function() { //todo: trigger and implement
+        this.venues.fetch({data: {lat:pos.coords.latitude, lon:pos.coords.longitude}});
     },
     getCurVenue: function() {
         return this.resultsView.curVenue;

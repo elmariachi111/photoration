@@ -89,8 +89,8 @@ Services.prototype = {
             location = this.DEFAULT_LOCATION;
         }
         var options = {
-            limit: 2,
-            perPage: req.param("perPage") || 6,
+            limit: 10,
+            perPage: req.param("perPage") || 10,
             offset: req.param("offset") || 0
         };
         this.getFourSquareVenues(location, {limit: options.limit}, function(err, fsqDoc) {
