@@ -55,25 +55,15 @@ PHR.MainResultRow = Backbone.View.extend({
         this.$el.html(html);
 
         this.$scrollPane = this.$('.scroll-pane');
-        this.$scrollPane.swipe({
 
-            swipe:function(event, direction, distance, duration, fingerCount){
-                event.stopPropagation(); //prevent tap event
-
+        this.$scrollPane.hammer().on("dragleft dragright", function(ev){ ev.gesture.preventDefault(); })
+            .on("swipeleft swiperight", function(ev) {
                 var cLeft = that.$scrollPane.position().left;
-                if (direction=="left") {
-                    that.$scrollPane.css({left: (cLeft - distance*1.5) + "px"});
-                } else if (direction=="right"){
-                    that.$scrollPane.css({left: (cLeft + distance*1.5) + "px"});
-                }
-                return false;
-            },
-            threshold:20,
-            allowPageScroll:"vertical",
-            triggerOnTouchEnd : true
-        });
+                var distance = ev.gesture.deltaX;
+                that.$scrollPane.css({left: Math.min(0,(cLeft + distance*1.8)) + "px"});
+            });
 
-        this.$(".scroll-pane .spot-result").on("tap", this.venueSelected.bind(this));
+        this.$scrollPane.hammer().on("tap", this.venueSelected.bind(this));
         return this;
     },
     more: function() {
@@ -81,8 +71,9 @@ PHR.MainResultRow = Backbone.View.extend({
         this.$scrollPane.css({left: (cLeft - 100) + "px"});
     },
     venueSelected: function(evt) {
+        var target = $(evt.target).data('target');
         this.options.parentView.curVenue = this.model;
-        this.options.parentView.trigger("selected", $(evt.currentTarget).data('target'));
+        this.options.parentView.trigger("selected", target);
     }
 
 });

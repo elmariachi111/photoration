@@ -61,7 +61,7 @@
 <script type="text/javascript">
     $( function() {
         var app = new PHR.App({el:'theApp'});
-        Backbone.history.start({pushState: false, root: "/"})
+        Backbone.history.start();
     });
 </script>
 
@@ -71,7 +71,7 @@
     <div class="scroll-pane">
 
         {{#extPictures.eyeemAlbum.photos.items}}
-        <div class="spot-result" data-target="page-photo/{{id}}" style="background-image:url('{{thumbUrl}}');">
+        <div class="spot-result" data-target="#page-photo/{{id}}" style="background-image:url('{{thumbUrl}}');">
 
         </div>
         {{/extPictures.eyeemAlbum.photos.items}}
