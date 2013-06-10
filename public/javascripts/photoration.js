@@ -43,7 +43,6 @@ PHR.Photo = Backbone.Model.extend({
 
 PHR.MainResultRow = Backbone.View.extend({
     events: {
-        "click .spot-result": "savePhotoVenue"
     },
     tagName: "div",
     className: "spot-result-row",
@@ -59,6 +58,8 @@ PHR.MainResultRow = Backbone.View.extend({
         this.$scrollPane.swipe({
 
             swipe:function(event, direction, distance, duration, fingerCount){
+                event.stopPropagation(); //prevent tap event
+
                 var cLeft = that.$scrollPane.position().left;
                 if (direction=="left") {
                     that.$scrollPane.css({left: (cLeft - distance*1.5) + "px"});
@@ -71,13 +72,15 @@ PHR.MainResultRow = Backbone.View.extend({
             allowPageScroll:"vertical",
             triggerOnTouchEnd : true
         });
+
+        this.$(".scroll-pane .spot-result").on("tap", this.venueSelected.bind(this));
         return this;
     },
     more: function() {
         var cLeft = this.$scrollPane.position().left;
         this.$scrollPane.css({left: (cLeft - 100) + "px"});
     },
-    savePhotoVenue: function(evt) {
+    venueSelected: function(evt) {
         this.options.parentView.curVenue = this.model;
         this.options.parentView.trigger("selected", $(evt.currentTarget).data('target'));
     }
