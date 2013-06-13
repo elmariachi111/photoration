@@ -44,6 +44,9 @@ h1 {
     max-width:inherit;
 }
 
+.page .inter {
+    text-align: center;padding: 5px 0px;
+}
 .spot-result-row {
     position:relative;
     width: 100%;
@@ -54,8 +57,9 @@ h1 {
 .spot-result-row .scroll-pane {
     width:10000px;
     height:100px;
-    left:0px;
-    position:relative;
+    top:5px;
+    left:125px;
+    position:absolute;
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
 }
@@ -83,12 +87,15 @@ h1 {
 }
 
 h2.spot-name {
-    position: absolute;
+    position: relative;
     z-index: 10;
     margin: 0;
-    font-size: 1.6em;
+    font-size: 1.1em;
     background: rgba(80,80,80,0.8);
     padding: 0.3em;
+    height: 100%;
+    width: 120px;
+    line-height: 1.3em;
 }
 
 #page-main .header {

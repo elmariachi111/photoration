@@ -87,7 +87,7 @@ PHR.MainResultRow = Backbone.View.extend({
             .on("swipeleft swiperight", function(ev) {
                 var cLeft = that.$scrollPane.position().left;
                 var distance = ev.gesture.deltaX;
-                var newPos = Math.min(0,(cLeft + distance*1.8));
+                var newPos = Math.min(125,(cLeft + distance*1.8));
                 that.$scrollPane.css({left: newPos + "px"});
                 that.model.trigger("swiped", newPos);
             });
