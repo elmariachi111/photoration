@@ -47,6 +47,10 @@ h1 {
 .page .inter {
     text-align: center;padding: 5px 0px;
 }
+
+.page .btn-block {
+    margin:10px 0px;
+}
 .spot-result-row {
     position:relative;
     width: 100%;
@@ -106,7 +110,11 @@ h2.spot-name {
     top: 0.4em;
     background-color: rgba(80,80,80,0.6);
 }
-div.detailData{
-    display:inline;
-    margin-right: 20%;
+#theSettings li{
+    margin:15px;
+}
+#theSettings li img { float:left;margin-right:10px;  }
+
+#theImage img {
+    min-width: 100%;
 }

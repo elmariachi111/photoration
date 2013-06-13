@@ -2,6 +2,8 @@ PHR.PagePhoto = Backbone.View.extend({
 
     initialize: function() {
         this.$imgDiv = this.$('#theImage');
+        this.$settingsUl = this.$('#theSettings ul');
+
         this.mainPage = this.options.mainPage;
     },
     show: function(eyeemid) {
@@ -17,11 +19,15 @@ PHR.PagePhoto = Backbone.View.extend({
             var $img = $('<img src="'+image.get('photoUrl')+'">');
             self.$imgDiv.html($img);
 
-            $('#time').html(dt.toLocaleTimeString());
-            $('#date').html(dt.toLocaleDateString());
-            $('#filter').html(resp.photo.filter);
-            $('#likes').html(resp.photo.likers.total);
+            var settings = [];
+            settings.push( { icon: '/img/time_icon.png', title:'Time', value: dt.toLocaleTimeString()});
+            settings.push( { icon: '/img/date_icon.png', title:'Date', value: dt.toLocaleDateString()});
+            settings.push({ icon:'/img/venue_icon.png', title:"Venue", value: "-"});
+            settings.push( { icon: '/img/filter_icon.png', title:'Filter', value: resp.photo.filter});
+            settings.push( { icon: '/img/like_icon.png', title:'Likers', value: resp.photo.likers.total});
 
+            var html = PHR.TPL.tpl_photo_settings({settings: settings});
+            self.$settingsUl.html(html);
             var ll = new google.maps.LatLng(resp.photo.latitude, resp.photo.longitude);
             var gmap = self.showMap(ll);
 

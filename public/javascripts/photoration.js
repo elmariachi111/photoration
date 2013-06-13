@@ -6,7 +6,8 @@ PHR.Router = Backbone.Router.extend({
 $( function() {
     PHR.TPL = {
         tpl_spot_result: Mustache.compilePartial('tpl_spot_result',document.getElementById('tpl_spot_result').innerHTML),
-        tpl_spot_row: Mustache.compile(document.getElementById('tpl_spot_row').innerHTML)
+        tpl_spot_row: Mustache.compile(document.getElementById('tpl_spot_row').innerHTML),
+        tpl_photo_settings: Mustache.compile(document.getElementById('tpl_photo_settings').innerHTML)
     };
 });
 
