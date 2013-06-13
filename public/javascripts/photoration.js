@@ -41,6 +41,7 @@ PHR.Venue = Backbone.Model.extend({
         var photoDisplayLength = eyeemAlbum.photos.items.length * 160;
         if (Math.abs(newPos) > photoDisplayLength - 800)
             this.loadMore();
+
     }
 });
 
@@ -53,8 +54,8 @@ PHR.Venues = Backbone.Collection.extend({
         _.each(response.venues, function(v) {
             var venue = new PHR.Venue(v);
             self.add(venue);
+            venue.on("swiped" , function() { self.trigger("swiped", venue) });
         });
-
     }
 });
 PHR.Photo = Backbone.Model.extend({
@@ -127,6 +128,7 @@ PHR.PageMain = Backbone.View.extend({
         "click #btn-loadmore-venues": "loadMoreVenues"
     },
     initialize: function() {
+        var self = this;
         this.DEFAULT_LOCATION = {
             coords: {
                 latitude: 52.516012,
@@ -135,9 +137,14 @@ PHR.PageMain = Backbone.View.extend({
         };
         this.$loading = this.$('#loading');
         this.setupMap();
+
         this.markers = [];
         this.venues = new PHR.Venues();
         this.listenTo(this.venues, "add", this.venueAdded);
+        this.listenTo(this.venues, "swiped", function(venue) {
+            var ll = venue.getGLatLng();
+            self.gmap.setCenter(ll);
+        });
         this.resultsView = new PHR.ResultsView({
             el: this.$('#pnl-results'),
             collection: this.venues,
