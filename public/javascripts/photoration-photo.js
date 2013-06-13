@@ -18,24 +18,27 @@ PHR.PagePhoto = Backbone.View.extend({
 
             var $img = $('<img src="'+image.get('photoUrl')+'">');
             self.$imgDiv.html($img);
+            var curVenue = self.mainPage.getCurVenue();
 
             var settings = [];
             settings.push( { icon: '/img/time_icon.png', title:'Time', value: dt.toLocaleTimeString()});
             settings.push( { icon: '/img/date_icon.png', title:'Date', value: dt.toLocaleDateString()});
-            settings.push({ icon:'/img/venue_icon.png', title:"Venue", value: "-"});
+            settings.push({ icon:'/img/venue_icon.png', title:"Venue", value: curVenue?curVenue.get('name'):""});
             settings.push( { icon: '/img/filter_icon.png', title:'Filter', value: resp.photo.filter});
             settings.push( { icon: '/img/like_icon.png', title:'Likers', value: resp.photo.likers.total});
 
             var html = PHR.TPL.tpl_photo_settings({settings: settings});
             self.$settingsUl.html(html);
             var ll = new google.maps.LatLng(resp.photo.latitude, resp.photo.longitude);
-            var gmap = self.showMap(ll);
+            var curLoc = self.mainPage.curLoc;
+
+            var gmap = self.showMap(curVenue.getGLatLng(), ll);
 
         });
     },
-    showMap: function(ll) {
+    showMap: function(venueLL, photoLL) {
         var mapOptions = {
-            center: ll,
+            center: photoLL,
             zoom: 15,
             mapTypeControl: false,
             zoomControlOptions: {
@@ -45,17 +48,15 @@ PHR.PagePhoto = Backbone.View.extend({
         };
         var gmap = new google.maps.Map(document.getElementById('gmap2'),  mapOptions);
         this.curMarker = new google.maps.Marker({
-            position: ll,
+            position: photoLL,
             map:  gmap,
             animation: google.maps.Animation.DROP,
             icon: "/img/marker.png"
         });
 
-        var curVenue = this.mainPage.getCurVenue();
-        if (curVenue) {
-            var ll = curVenue.getGLatLng();
+        if (venueLL) {
             var marker = new google.maps.Marker({
-                position: ll,
+                position: venueLL,
                 map:  gmap,
                 animation: google.maps.Animation.DROP
             });
